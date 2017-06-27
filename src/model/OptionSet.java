@@ -1,8 +1,6 @@
 /*
  * Alena Marchuk
  * CIS 35B
- * Due: May 14, 2017
- * Submitted: May 14, 2017
  */
 
 package model;
@@ -28,7 +26,7 @@ public class OptionSet implements Serializable, Comparable<OptionSet>, Loggable{
 	
 	private int findOptionIdx(String name){
 		for (int x = 0; x < options.size(); x++){
-			if (options.get(x).getOptName().equalsIgnoreCase(name))
+			if (options.get(x).getOptName().contains(name))
 				return x; 
 		}
 		return -1; 
@@ -170,7 +168,11 @@ public class OptionSet implements Serializable, Comparable<OptionSet>, Loggable{
 	}
 	
 	protected void addOption(String optionName, float optionPrice){
-		addOption(new Option(optionName, optionPrice)); 
+		int idx = findOptionIdx(optionName); 
+		if (idx == -1)
+			addOption(new Option(optionName, optionPrice)); 
+		else
+			log(String.format(" addOption(): option %s already exists.", optionName)); 
 	}
 	
 	//Delete methods

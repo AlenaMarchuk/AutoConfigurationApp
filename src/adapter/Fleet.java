@@ -1,8 +1,6 @@
 /*
  * Alena Marchuk
  * CIS 35B
- * Due: May 14, 2017
- * Submitted: May 14, 2017
  */
 
 package adapter;
@@ -12,6 +10,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
+import scale.EditOptions; 
 import model.Automobile; 
 
 public class Fleet<K, V extends Automobile> implements Loggable{
@@ -29,10 +28,28 @@ public class Fleet<K, V extends Automobile> implements Loggable{
 		return fleet;
 	}
 	
-	//Updatable implementations
+	//<<Updatable>> implementations
 	public void updateOptSetName(K autoKey, String optSetName, String newName){
-		if (fleet.containsKey(autoKey))
+		if (fleet.containsKey(autoKey)){
 			fleet.get(autoKey).updateOptSetName(optSetName, newName);
+			
+			/*
+			 * tried to show thread corruption 
+			char[] arr = newName.toCharArray();  
+			try{
+				if (arr != null ){
+					for (int x = 0; x < arr.length; x++){
+						EditOptions.showAtomic.add(arr[x]); 
+					}
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e){
+				System.out.printf("Newname: %s", newName); 
+				//System.out.printf(arr.toString()); 
+				e.printStackTrace();
+			}
+			*/
+		}
 		else
 			log(autoCouldNotBeFoundMssg(autoKey)); 
 	}
@@ -86,7 +103,7 @@ public class Fleet<K, V extends Automobile> implements Loggable{
 			fleet.put(autoKey, auto); 
 	}
 	
-	//Selectable implementations 
+	//<<Selectable>> implementations 
 	public void selectOption(K autoKey, String optSetName, String optionName){
 		if (fleet.containsKey(autoKey))
 			fleet.get(autoKey).setOptionChoice(optSetName, optionName);
@@ -124,6 +141,16 @@ public class Fleet<K, V extends Automobile> implements Loggable{
 			log(autoCouldNotBeFoundMssg(autoKey)); 
 	}
 	
+	//<<Editable>> implementation
+	public void editOptions(K autoKey, int opNo, String[] args, boolean isSync){
+		K key = (K)autoKey; 
+		if (fleet.containsKey(autoKey)){
+			EditOptions synchEdit = new EditOptions((String)autoKey, opNo, args, isSync); 
+		}
+		else
+		log(autoCouldNotBeFoundMssg(key)); 
+	}
+	
 	public void printSelection(K autoKey){
 		if (fleet.containsKey(autoKey))
 			fleet.get(autoKey).printChoices();
@@ -145,7 +172,19 @@ public class Fleet<K, V extends Automobile> implements Loggable{
 		while(it.hasNext()){
 			V auto = (V)it.next(); 
 			auto.printAutomobile();
+		}	
+			/*
+			 * used in attempt to show thread corruption
+			try{
+				for (Thread t: EditOptions.threads)
+					t.join(); 
+				}
+			catch(InterruptedException e){
+			}
+			auto.printAutomobile();
+			System.out.printf(EditOptions.showAtomic.toString()); 
 		}
+		*/
 	}
 
 	@Override

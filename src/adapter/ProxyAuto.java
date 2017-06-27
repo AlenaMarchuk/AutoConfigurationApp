@@ -1,8 +1,6 @@
 /*
  * Alena Marchuk
  * CIS 35B
- * Due: May 14, 2017
- * Submitted: May 14, 2017
  */
 
 package adapter;
@@ -15,6 +13,10 @@ import util.FileIO;
 
 public abstract class ProxyAuto implements Loggable {
 	private static Fleet<String, Automobile> fleet = new Fleet<>(); 
+	
+	protected static Fleet<String, Automobile> getFleet(){
+		return fleet; 
+	}
 	
 	public void buildAuto(String autoType, String filename) throws AutoException{
 		FileIO file = new FileIO(); 
@@ -91,7 +93,7 @@ public abstract class ProxyAuto implements Loggable {
 			}
 	}
 	
-	//Updatable wrappers 
+	//<<Updatable>> wrappers 
 	public void updateOptSetName(String autoKey, String optSetName, String newName) {
 		fleet.updateOptSetName(autoKey, optSetName, newName);
 	}
@@ -120,7 +122,7 @@ public abstract class ProxyAuto implements Loggable {
 		fleet.deleteOption(autoKey, optSetName, optionName); 
 	}
 	
-	//Selectable wrappers
+	//<<Selectable>> wrappers
 	public void selectOption(String autoKey, String optSetName, String optionName){
 		fleet.selectOption(autoKey, optSetName, optionName);
 	}
@@ -139,6 +141,10 @@ public abstract class ProxyAuto implements Loggable {
 	
 	public void clearSelection(String autoKey){
 		fleet.clearSelection(autoKey);
+	}
+	
+	public void editOptions(String autoKey, int opNo,  String[] args, boolean isSync){
+		fleet.editOptions(autoKey, opNo, args, isSync);
 	}
 	
 	public void printSelection(String autoKey){

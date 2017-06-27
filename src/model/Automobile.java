@@ -1,8 +1,6 @@
 /*
  * Alena Marchuk
  * CIS 35B
- * Due: May 14, 2017
- * Submitted: May 14, 2017
  */
 
 package model;
@@ -12,6 +10,7 @@ import java.io.FileWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+
 import util.FileIO;
 import exception.AutoException;
 import adapter.Loggable;
@@ -31,7 +30,7 @@ public  abstract class Automobile implements Serializable, Loggable{
 	
 	private int findOptSetIdx(String name){
 		for (int x = 0; x < optSet.size(); x++){
-			if (optSet.get(x).getOptSetName().equalsIgnoreCase(name) )
+			if (optSet.get(x).getOptSetName().contains(name) )
 				return x; 
 		}
 		return -1; 
@@ -237,8 +236,9 @@ public  abstract class Automobile implements Serializable, Loggable{
 	//Update methods
 	public void updateOptSetName(String optSetName, String newName){
 		int idx = findOptSetIdx(optSetName); 
-		if (idx != -1)
+		if (idx != -1){
 			setOptSetName(idx, newName);
+		}
 		else
 			log(" updateOptSet() " + configSetCouldNotBeFoundMssg(optSetName)); 
 	}
@@ -274,8 +274,13 @@ public  abstract class Automobile implements Serializable, Loggable{
 	}
 	
 	public void addOptSet(String optSetName){
-		optSet.add(new OptionSet(optSetName)); 
-		choices.add(new Option()); 
+		int idx = findOptSetIdx(optSetName); 
+		if (idx == -1){
+			optSet.add(new OptionSet(optSetName)); 
+			choices.add(new Option()); 
+		}
+		else
+			log(String.format(" addOptSet(): %s already exists.", optSetName)); 
 	}
 	
 	public void addOption(String optSetName, String optionName, float optionPrice){
