@@ -8,25 +8,29 @@
 
 package driver;
 
-import model.AutoModel;
+import exception.AutoException;
+import model.Automobile;
 import util.FileIO;
 
-public class Driver {
+public class Lab1 {
 
 	public static void main(String[] args) {
 		
 		try{
 		FileIO file = new FileIO(); 
-		AutoModel autoBeforeSerialization = file.buildAutoModel("/Users/alena/Documents/workspace/AutoModelConfigurationApp/fordFocusWagonConfigs");
+		Automobile autoBeforeSerialization = file.buildAuto("fordFocusWagon");
 
 		System.out.printf("\n\tAuto model properties before serialization:\n");
-		autoBeforeSerialization.printModelConfigurations();
-		file.serializeAutoModel(autoBeforeSerialization);
+		autoBeforeSerialization.printAutomobile();
+		file.serializeAutomobile(autoBeforeSerialization);
 		
 		System.out.printf("\n\tAuto model properties after serialization:\n");
-		AutoModel autoAfterSerialization = file.deserializeAutoModel(); 
-		autoAfterSerialization.printModelConfigurations(); 
+		Automobile autoAfterSerialization = file.deserializeAutomobile(); 
+		autoAfterSerialization.printAutomobile(); 
 		} 
+		catch(AutoException e){
+			
+		}
 		catch(NullPointerException e){
 			System.out.print(e.toString());
 		}

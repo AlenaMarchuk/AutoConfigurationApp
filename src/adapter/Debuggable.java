@@ -1,9 +1,8 @@
 /*
  * Alena Marchuk
  * CIS 35B
- * Lab1
- * Due: April 20, 2017
- * Submitted: April 20, 2017
+ * Due: April 30, 2017
+ * Submitted: April 30, 2017
  */
 
 package adapter;
