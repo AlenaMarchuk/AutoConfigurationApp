@@ -1,9 +1,8 @@
 /*
  * Alena Marchuk
  * CIS 35B
- * Lab1
- * Due: April 20, 2017
- * Submitted: April 20, 2017
+ * Due: May 14, 2017
+ * Submitted: May 14, 2017
  */
 
 package util;
@@ -15,11 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import model.Automobile; 
+import model.*; 
 import adapter.Debuggable;
 import adapter.Loggable;
 import exception.AutoException; 
@@ -56,10 +53,9 @@ public class FileIO implements Debuggable, Loggable{
 	
 	public FileIO() {}
 	
-	public Automobile buildAuto(String fileName) throws AutoException{
+	public Automobile buildAuto(Automobile automobile, String fileName) throws AutoException{
 		
 		int counter = 0; 
-		Automobile automobile = new Automobile(); 
 		FileReader file = null; 
 		
 		try{
@@ -95,23 +91,31 @@ public class FileIO implements Debuggable, Loggable{
 					if (counter == 1){
 						
 						try{
-							automobile.setAutomobileName(line);
+							automobile.setMake(line);
 						}
 						catch(AutoException e){
 							try{
 								e.fix(e.getErrorNo()); 
 							}
 							catch(AutoException b){
-								automobile.setAutomobileName(b.getFix());
+								automobile.setMake(b.getFix());
 							}
 						}
 						
 						if (DEBUG){
-							automobile.printAutoName(); 
+							automobile.printAutoMake(); 
 						}
 					}
 					
 					if (counter == 2){
+						automobile.setModel(line); 
+						
+						if (DEBUG){
+							automobile.printAutoModel(); 
+						}
+					}
+					
+					if (counter == 3){
 						
 						try{
 							automobile.setBasePrice(Float.valueOf(line));
@@ -132,33 +136,33 @@ public class FileIO implements Debuggable, Loggable{
 						}
 					}
 					
-					if (counter == 3){
+					if (counter == 4){
 						
 						setOptSetNumHelper(line, automobile); 
 						
 						if (DEBUG){
-							System.out.printf("\nFileIO DEBUG: Number of configuration options is %s", automobile.getOptSet().length); 
+							System.out.printf("\nFileIO DEBUG: Number of configuration options is %s", automobile.getOptSet().size()); 
 						}
 					}
 							
-					if (counter > 3 && automobile.getOptSet().length > 0){
+					if (counter > 4 && automobile.getOptSet().size()> 0){
 
 					if (!line.isEmpty()){
 							String[] lineTokens = line.split(";");
-							automobile.setOptSetName(counter - 4, lineTokens[0]);					
-							automobile.setNumOfOptions(counter - 4, lineTokens.length - 1);
+							automobile.setOptSetName(counter - 5, lineTokens[0]);					
+							automobile.setNumOfOptions(counter - 5, lineTokens.length - 1);
 							
 							//Populate optSet with options
 							for (int x = 1; x < lineTokens.length; x++){
 								String lineOpts[] = lineTokens[x].split(":");
-								automobile.setOption(counter - 4, x - 1, lineOpts[0], Float.valueOf(lineOpts[1]));
+								automobile.setOption(counter - 5, x - 1, lineOpts[0], Float.valueOf(lineOpts[1]));
 							}
 						
 							if (DEBUG){
-										automobile.printOptSet(counter - 4);
+										automobile.printOptSet(counter - 5);
 							}
 						}
-						else if (line.isEmpty() && counter - 3 <= automobile.getOptSet().length){
+						else if (line.isEmpty() && counter - 4 <= automobile.getOptSet().size()){
 							AutoException a = new AutoException(5);  //or simply set empty options set  w/t throwing exception
 							log(getErrorMsg(5)); 
 							try{
@@ -168,8 +172,8 @@ public class FileIO implements Debuggable, Loggable{
 								String fix = b.getFix(); 
 								String[] emptyOptSet = fix.split(":"); 
 								
-								automobile.setOptSetName(counter -4, emptyOptSet[0]); 
-								automobile.setNumOfOptions(counter - 4, Integer.valueOf(emptyOptSet[1])); 
+								automobile.setOptSetName(counter -5, emptyOptSet[0]); 
+								automobile.setNumOfOptions(counter - 5, Integer.valueOf(emptyOptSet[1])); 
 							}
 						}
 					}

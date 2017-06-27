@@ -1,0 +1,24 @@
+
+Sun May 14 02:40:53 PDT 2017 @ Automobile Class:  findOption() 'Wheels' configuration set could not be found in Lexus RX350.
+Sun May 14 02:40:53 PDT 2017 @ Automobile Class:  setOptionChoice()  choice cannot be added.
+
+Sun May 14 02:40:53 PDT 2017 @ Fleet Class: 'No such model' could not be found.
+Sun May 14 02:40:53 PDT 2017 @ Fleet Class: 'Lexus' could not be found.
+Sun May 14 02:40:53 PDT 2017 @ Fleet Class: 'No such car' could not be found.
+Sun May 14 02:40:53 PDT 2017 @ Fleet Class: 'No Such Car' could not be found.
+Sun May 14 02:41:04 PDT 2017 @ Fleet Class: 'No Such Auto in Fleet' could not be found.
+Sun May 14 02:41:04 PDT 2017 @ Automobile Class:  updateOptSet() 'No Such Option Set Name' configuration set could not be found in Ford Focus Wagon ZTW.
+Sun May 14 02:41:04 PDT 2017 @ Fleet Class: 'No such model' could not be found.
+Sun May 14 02:41:04 PDT 2017 @ Fleet Class: 'LexusRX350Truck' could not be found.
+Sun May 14 02:41:04 PDT 2017 @ OptionSet Class:  updateOptionPrice() 'Midnight Blue' option could not be found
+Sun May 14 02:41:04 PDT 2017 @ Automobile Class:  updateOptionPrice() 'Doors' configuration set could not be found in Lexus RX350.
+Sun May 14 02:41:04 PDT 2017 @ Automobile Class:  updateOptionName() 'CD Silver Clearcoat Metallic' configuration set could not be found in Ford Focus Wagon ZTW.
+Sun May 14 02:41:04 PDT 2017 @ Fleet Class: 'No such model' could not be found.
+Sun May 14 02:41:04 PDT 2017 @ Fleet Class: 'FordFocus Wagon ZTWCOUPE' could not be found.
+Sun May 14 02:41:04 PDT 2017 @ Automobile Class:  addOption() 'NO such option set' configuration set could not be found in Lexus RX350.
+Sun May 14 02:41:04 PDT 2017 @ Fleet Class: 'Loggable Name' could not be found.
+Sun May 14 02:41:04 PDT 2017 @ Automobile Class:  deleteOptSet() 'Old Air Bags' configuration set could not be found in Lexus RX350.
+Sun May 14 02:41:04 PDT 2017 @ Fleet Class: 'FordFocus' could not be found.
+Sun May 14 02:41:04 PDT 2017 @ Automobile Class:  deleteOption() 'No such option set' configuration set could not be found in Lexus RX350.
+Sun May 14 02:41:04 PDT 2017 @ Fleet Class: 'FordFocus' could not be found.
+Sun May 14 02:41:04 PDT 2017 @ Fleet Class: 'Lexus' could not be found.

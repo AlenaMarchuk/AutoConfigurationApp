@@ -1,53 +1,45 @@
 /*
  * Alena Marchuk
  * CIS 35B
- * Lab1
- * Due: April 20, 2017
- * Submitted: April 20, 2017
+ * Due: May 14, 2017
+ * Submitted: May 14, 2017
  */
 
 package model;
 
-import java.util.Arrays;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import adapter.Loggable;
 
 public class OptionSet implements Serializable, Comparable<OptionSet>, Loggable{
+	private static final long serialVersionUID = 1L;
+	private String optSetName; 
+	private ArrayList<Option> options; 
+	private Option choice; 
 	
-	private String optSetName = "Undefined"; 
-	private Option[] options; 
-	
-	//private helper method
-	private boolean isOptionNull(int idx){
-		return (options[idx] == null ? true : false); 
-	}
-	
+	//private helper methods
 	private boolean isOptionsIdxValid(int idx){
-		return (idx >= 0 && idx < options.length ? true : false); 
+		return (idx >= 0 && idx < options.size() ? true : false); 
 	}
 	
 	private int findOptionIdx(String name){
-		for (int x = 0; x < options.length; x++){
-			if (!isOptionNull(x) && options[x].getOptName().equalsIgnoreCase(name)){
+		for (int x = 0; x < options.size(); x++){
+			if (options.get(x).getOptName().equalsIgnoreCase(name))
 				return x; 
-			}
 		}
 		return -1; 
 	}
 	
 	private String optionCouldNotBeFoundMssg(String optionName){
-		return String.format("%s option could not be found", optionName); 
+		return String.format("\'%s\' option could not be found", optionName); 
 	}
 	
-	private String arrIdxOutOfBoundsMssg(){
-		return "Index is out of bounds of options[]."; 
-	}
-	
-	private String optionAtIdxNullMssg(int idx){
-		return String.format("Option at %d index is null", idx); 
+	private String idxOutOfBoundsMssg(int idx){
+		return String.format("Index \'%d\' is out of bounds of ArrayList \'options\'.", idx); 
 	}
 
 	//Constructors
@@ -57,32 +49,44 @@ public class OptionSet implements Serializable, Comparable<OptionSet>, Loggable{
 		setOptSetName(name); 
 		setOptions(numberOfOptions); 
 	}
+	
+	public OptionSet(String name){
+		setOptSetName(name); 
+		setOptions(0); 
+	}
+	
+	public OptionSet(String name, Option option){
+		setOptSetName(name); 
+		options.add(option); 
+	}
 
 	//Getters
 	protected String getOptSetName() {
 		return optSetName;
 	}
 
-	protected Option[] getOptions() {
+	protected ArrayList<Option> getOptions() {
 		return options;
 	}
 	
+	protected Option getChoice() {
+		return choice;
+	}
+
 	protected Option findOption(String opName){
 		int idx = findOptionIdx(opName); 
 		if (idx != -1)
-			return options[idx]; 
+			return options.get(idx); 
 		else
 			log(" findOption() " + optionCouldNotBeFoundMssg(opName));  
 		return null; 
 	}
 	
 	protected Option findOption(int optionIdx){
-		if(isOptionsIdxValid(optionIdx) && !isOptionNull(optionIdx))
-			return options[optionIdx]; 
-		else if  (isOptionsIdxValid(optionIdx) && isOptionNull(optionIdx))
-			log(" findOption() " + optionAtIdxNullMssg(optionIdx)); 
+		if(isOptionsIdxValid(optionIdx))
+			return options.get(optionIdx); 
 		else
-				log(" findOption() " + arrIdxOutOfBoundsMssg()); 
+				log(" findOption() " + idxOutOfBoundsMssg(optionIdx)); 
 		return null; 
 	}
 
@@ -91,32 +95,48 @@ public class OptionSet implements Serializable, Comparable<OptionSet>, Loggable{
 		optSetName = name;
 	}
 
-	protected void setOptions(Option[] options) {
+	protected void setOptions(ArrayList<Option> options) {
 		this.options = options;
 	}
 	
 	protected void setOptions(int numberOfOptions){
-		if (numberOfOptions > 0){
-			options = new Option[numberOfOptions]; 
-			for (int x = 0; x < options.length; x++)
-				options[x] = new Option(); 
+		if (numberOfOptions >= 0){
+			options = new ArrayList<Option>(numberOfOptions); 
+			for (int x = 0; x < numberOfOptions; x++)
+				options.add(new Option()); 
 		}
 		else
-			log(" setOptions(): total number of options is 0 or negative.\n"); 	
+			log(" setOptions(): total number of options is 0 or negative."); 	
 	}
 	
+	protected void setChoice(Option choice) {
+		this.choice = choice;
+	}
+
 	protected void setOption(int idx, String name, float price) {
 		if (isOptionsIdxValid(idx)){
-			if (isOptionNull(idx)){
-				options[idx] = new Option(); 
-			}
 			setOptionName(idx, name); 
 			setOptionPrice(idx, price); 
 		}
 		else
-			log(" setOption() " + arrIdxOutOfBoundsMssg()); 
+			log(" setOption() " + idxOutOfBoundsMssg(idx)); 
 	}
 	
+	protected void setOptionName(int idx, String name){
+		if (isOptionsIdxValid(idx))
+				options.get(idx).setOptName(name);
+		else
+			log(" setOptionName() " + idxOutOfBoundsMssg(idx)); 
+	}
+	
+	protected void setOptionPrice(int idx, float price) {
+		if (isOptionsIdxValid(idx))
+				options.get(idx).setPrice(price);
+		else
+			log(" setOptionPrice() " + idxOutOfBoundsMssg(idx)); 
+	}
+	
+	//Update methods
 	protected void updateOption(String opName, String newName, float newPrice){
 		int idx = findOptionIdx(opName); 
 		if (idx != -1){
@@ -126,144 +146,91 @@ public class OptionSet implements Serializable, Comparable<OptionSet>, Loggable{
 		else
 			log(" updateOption() " + optionCouldNotBeFoundMssg(opName)); 
 	}
-	
-	protected void setOptionName(int idx, String name){
-		if (isOptionsIdxValid(idx)){
-			if (isOptionNull(idx)){
-				options[idx] = new Option(); 
-			}
-				options[idx].setOptName(name);
-		}
-		else
-			log(" setOptionName() " + arrIdxOutOfBoundsMssg()); 
-	}
-	
+
 	protected void updateOptionName(String opName, String newName) {
 		int idx = findOptionIdx(opName); 
 		if (idx != -1)
-			options[idx].setOptName(newName);
+			options.get(idx).setOptName(newName);
 		else
 			log(" updateOptionName() " + optionCouldNotBeFoundMssg(opName)); 
-	}
-	
-	protected void setOptionPrice(int idx, float price) {
-		if (isOptionsIdxValid(idx)){
-			if (isOptionNull(idx)){
-				options[idx] = new Option(); 
-			}
-				options[idx].setPrice(price);
-		}
-		else
-			log(" setOptionPrice() " + arrIdxOutOfBoundsMssg()); 
 	}
 	
 	protected void updateOptionPrice(String opName, float newPrice) {
 		int idx = findOptionIdx(opName); 
 		if (idx != -1)
-			options[idx].setPrice(newPrice);
+			options.get(idx).setPrice(newPrice);
 		else
 			log(" updateOptionPrice() " + optionCouldNotBeFoundMssg(opName)); 
 	}
 	
-
+	
+	//Add methods
 	protected void addOption(Option newOption){
-		boolean isAdded= false; 
-		for (int x = 0; x < options.length && !isAdded; x++){
-			if (isOptionNull(x)){
-				options[x] = newOption;
-				isAdded = true; 
-			}
-		}
-		if (!isAdded){
-			log(" addOption(): Auto model options configuration set is full."); 
-			log(" addOption(): New option could not be added."); 
-		}
+		options.add(newOption); 
 	}
 	
 	protected void addOption(String optionName, float optionPrice){
-		OptionSet opset = new OptionSet(); 
-		OptionSet.Option newOption = opset.new Option(optionName, optionPrice); 
-		addOption(newOption); 
+		addOption(new Option(optionName, optionPrice)); 
 	}
 	
+	//Delete methods
 	protected void deleteOption(String optionName){
 		int idx = findOptionIdx(optionName); 
-		if (idx != -1)
-			options[idx] = null;  
+		if (idx != -1){
+			if (options.get(idx).equals(choice))
+				choice = null; 
+			options.remove(idx);  
+		}
 		else
 			log(" deleteOption() " + optionCouldNotBeFoundMssg(optionName)); 
 	}
 	
 	protected void deleteOption(int optionsIdx){
 		if (isOptionsIdxValid(optionsIdx))
-			options[optionsIdx] = null; 
+			options.remove(optionsIdx); 
 		else
-			log(" deleteOption() " + arrIdxOutOfBoundsMssg()); 
+			log(" deleteOption() " + idxOutOfBoundsMssg(optionsIdx)); 
 	}
 
 	//print methods
 	protected void print(){
 		if (options != null){
 			System.out.printf("\n%s options:\n", getOptSetName());
-			//Arrays.sort(options); 
-			for (int x = 0; x < options.length; x++){
-				if (!isOptionNull(x))
-					options[x].print();
-			}
+			Collections.sort(options); 
+			for (int x = 0; x < options.size(); x++)
+					options.get(x).print();
 		}
 		else
 			log(" print(): option is null."); 
 	}
 	
 	protected void print(int optionsIdx){
-		if (isOptionsIdxValid(optionsIdx)){
-			if (!isOptionNull(optionsIdx))
-				options[optionsIdx].print(); 
-			else
-				log(" print() " + optionAtIdxNullMssg(optionsIdx)) ; 
-		}
+		if (isOptionsIdxValid(optionsIdx))
+				options.get(optionsIdx).print(); 
 		else
-				log(" print() " + arrIdxOutOfBoundsMssg()); 
+				log(" print() " + idxOutOfBoundsMssg(optionsIdx)); 
 	}
 	
 	protected void print(String optionName){
 		int idx = findOptionIdx(optionName);
 		if (idx != -1)
-			options[idx].print();  
+			options.get(idx).print();  
 		else
 			log(" print() " + optionCouldNotBeFoundMssg(optionName));
 	}
 	
 	@Override
 	public int compareTo(OptionSet o) {
-
-		if (this == null ||  o == null)
-			return 0; 
-		else{
-			if (this.optSetName == null){
-				if (o.optSetName == null)
-					return 0;  //equal
-				else
-					return -1;  //null is before the other string
-			}
-			else{
-				if (o.optSetName == null)
-					return 1; //null is after the  other string
-				else
-					return this.optSetName.compareTo(o.optSetName); 
-			} 
-		}
+			return (this.optSetName.compareTo(o.optSetName)); 
 	}
 	
 	@Override
 	public String toString() {
 		StringBuffer optionSet = new StringBuffer(String.format("\n%s options:\n", optSetName)); 
-		for (int x = 0; x < options.length; x++){
-			if (!isOptionNull(x)){
-				optionSet.append(options[x].toString()); 
+		for (int x = 0; x < options.size(); x++){
+				optionSet.append(options.get(x).toString()); 
 				optionSet.append("\n");  
 			}
-		}
 		return optionSet.toString();
 	}
 	
@@ -283,72 +250,6 @@ public class OptionSet implements Serializable, Comparable<OptionSet>, Loggable{
 		}
 		catch(Exception e){
 			log(e.toString()); 
-		}
-	}
-
-		//Inner Class 
-		class Option implements Serializable, Comparable<Option>{
-		private String optName = "Undefined option";
-		private float price;
-
-		//Constructors
-		public Option() {}
-
-		public Option(String name, float price) {
-			setOptName(name);
-			setPrice(price);
-		}
-
-		//Getters
-		protected String getOptName() {
-			return optName;
-		}
-
-		protected float getPrice() {
-			return price;
-		}
-
-		//Setters
-		protected void setOptName(String name) {
-			optName = name;
-		}
-
-		protected void setPrice(float price) {
-			this.price = price;
-		}
-
-		//Print method
-		protected void print() {
-			System.out.printf("%s is $%,.2f\n", optName, price);
-		}
-		
-		@Override
-		public int compareTo(Option o) {
-
-			if (this == null || o == null)
-				return 0; 
-			else{
-				if (this.optName == null){
-					if (o.optName == null)
-						return 0; 
-					else
-						return -1; 
-				}
-				else {
-					if (o.optName == null)
-						return 1; 
-					else
-						return this.optName.compareTo(o.optName); 
-				}
-			}		
-		}
-
-
-		@Override
-		public String toString() {
-			StringBuffer option = new StringBuffer(optName);
-			option.append(String.format(" is $%,.2f", price));
-			return option.toString();
 		}
 	}
 }

@@ -9,6 +9,7 @@ package exception;
 import util.FileIO; 
 
 public class AutoException extends Exception implements Fixable{
+	private static final long serialVersionUID = 1L;
 	private int errorNo; 
 	private String errorMsg; 
 	private String fix; 
